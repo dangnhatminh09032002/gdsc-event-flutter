@@ -9,6 +9,7 @@ export default function AdminPage() {
   const [participantsSearched, setParticipantsSearched] = useState([]);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   const searchFunc = useCallback(
     throttle(
@@ -43,7 +44,7 @@ export default function AdminPage() {
     e.preventDefault();
     setLoading(true);
     await fetch
-      .post("/participants", { email })
+      .post("/participants", { email, name })
       .then(async (res) => {
         const checkParticipant = await participants.some(
           (participant) => participant.email === res.data.email
@@ -92,8 +93,24 @@ export default function AdminPage() {
   return (
     <Container className="fluid" style={{ minHeight: "100vh" }}>
       <Form onSubmit={handleButtonAdd} className="mt-4">
-        <Form.Group controlId="formBasicEmail">
+        <Form.Group
+          controlId="formBasicEmail"
+          style={{
+            display: "flex",
+          }}
+        >
           <Form.Control
+            style={{ maxWidth: "50%" }}
+            type="text"
+            disabled={loading}
+            placeholder="Enter name"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+          <Form.Control
+            style={{ maxWidth: "50%" }}
             type="email"
             disabled={loading}
             placeholder="Enter email"
@@ -102,8 +119,8 @@ export default function AdminPage() {
               setEmail(e.target.value);
             }}
           />
-          <Button type="submit" disabled={loading} className="mt-3">
-            Add Participant
+          <Button type="submit" disabled={loading}>
+            Add
           </Button>
         </Form.Group>
       </Form>
@@ -136,7 +153,7 @@ export default function AdminPage() {
       <Table bordered hover>
         <thead>
           <tr>
-            <th>Id</th>
+            <th>Name</th>
             <th>Email</th>
             <th>Status</th>
             <th>Actions</th>
@@ -146,7 +163,7 @@ export default function AdminPage() {
           {participantsSearched.map((participant, index) => {
             return (
               <tr key={index}>
-                <td>{index + 1}</td>
+                <td>{participant.name}</td>
                 <td>{participant.email}</td>
                 <td
                   className={

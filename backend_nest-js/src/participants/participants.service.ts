@@ -21,7 +21,9 @@ export class ParticipantService {
 
     return {
       id: participantRef.id,
-      ...participant.data(),
+      name: participant.data().name,
+      email: participant.data().email,
+      status: participant.data().status,
     };
   }
 
@@ -36,6 +38,7 @@ export class ParticipantService {
     participantRef.forEach((doc) => {
       listParticipants.push({
         id: doc.id,
+        name: doc.data().name,
         email: doc.data().email,
         status: doc.data().status,
       });
@@ -55,6 +58,7 @@ export class ParticipantService {
 
     return {
       id: id,
+      name: participantRef.data().name,
       email: participantRef.data().email,
       status: participantRef.data().status,
     };
@@ -73,6 +77,7 @@ export class ParticipantService {
 
     return {
       id: participantRef.docs[0].id,
+      name: participantRef.docs[0].data().name,
       email: participantRef.docs[0].data().email,
       status: participantRef.docs[0].data().status,
     };
@@ -84,6 +89,7 @@ export class ParticipantService {
       .collection('participants')
       .doc(id)
       .update({
+        name: updateParticipantDto.name,
         email: updateParticipantDto.email,
         status: updateParticipantDto.status,
       });
@@ -96,6 +102,7 @@ export class ParticipantService {
 
     return {
       id: id,
+      name: participant.data().name,
       email: participant.data().email,
       status: participant.data().status,
     };
@@ -118,6 +125,7 @@ export class ParticipantService {
 
     return {
       id: id,
+      name: participant.data().name,
       email: participant.data().email,
       status: participant.data().status,
     };

@@ -29,12 +29,16 @@ export class ParticipantController {
 
   @UseGuards(RolesGuard)
   @Post()
-  async create(@Body('email') email: string) {
-    if (!email) throw new BadRequestException('Email is required');
+  async create(@Body('email') email: string, @Body('name') name: string) {
+    if (!email || !name)
+      throw new BadRequestException('Email and name must be provided');
     const participant = await this.participantService.findByEmail(email.trim());
+
     if (participant) return participant;
+
     return await this.participantService.create({
-      email,
+      name: name,
+      email: email,
       status: 'not participate',
     });
   }
@@ -55,7 +59,8 @@ export class ParticipantController {
     if (!participant) throw new BadRequestException('Participant not found');
 
     return await this.participantService.update(participant.id, {
-      email: email,
+      name: participant.name,
+      email: participant.email,
       status: 'participated',
     });
   }
@@ -69,6 +74,7 @@ export class ParticipantController {
     if (!participant) throw new BadRequestException('Participant not found');
 
     return await this.participantService.update(id, {
+      name: participant.name,
       email: participant.email,
       status,
     });
